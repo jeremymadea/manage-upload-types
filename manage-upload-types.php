@@ -101,26 +101,25 @@ add_action('admin_init', 'jm_mut_settings_api_init');
 function jm_mut_setting_section_callback() {
 	echo '<p>The extensions below are those permitted for uploaded files.</p>' . "\n";
 	$jm_mut_mime_types = get_option('jm_mut_mime_types'); 
-	echo '<table id="jm_mut_mimetypes_table" '
-	   . 'style="border-collapse: collapse; border: 1px solid black;">' . "\n";
-	echo '  <tr>'
-	.    '<th style="border: 1px solid black; background-color: #f0f0f0;">Extension</th>'
-	.    '<th style="border: 1px solid black; background-color: #f0f0f0;">Mime Type</th>'
+	echo '<table id="jm_mut_mimetypes_table">' . "\n";
+	echo '  <tr class="jm_mut_mimetype_tr">'
+	.    '<th>Extension</th>'
+	.    '<th>Mime Type</th>'
 	.    "</tr>\n";
 	foreach ($jm_mut_mime_types as $extension => $mimetype) { 
-		echo '  <tr>'
-		.    '<td style="border: 1px solid black; padding: .5em;">' . $extension . '</td>'
-		.    '<td style="border: 1px solid black; padding: .5em;">' . $mimetype . '</td>'
-		.    '<td style="border: 1px solid black; padding: .5em;">'
+		echo '  <tr class="jm_mut_mimetype_tr">'
+		.    '<td class="jm_mut_extension_td">' . $extension . '</td>'
+		.    '<td class="jm_mut_mimetype_td">' . $mimetype . '</td>'
+		.    '<td class="jm_mut_delete_td">'
 		.    '<a href="javascript:void(0);" onClick="document.jm_mut_delete(' . "'$extension'" . ')">delete</a></td>'
 		.    "</tr>\n";
 	}
         echo '<tr>'; 
         echo '<td><input id="jm_mut_add_extension" type="text" /></td>';
         echo '<td><input id="jm_mut_add_mimetype" type="text" /></td>';
-        echo '<td style="text-align: center;"><input type="button" value="add" '
-	.    'onClick="document.jm_mut_add(jQuery(' . "'#jm_mut_add_extension'" . ').val(), '
-	.    'jQuery(' . "'#jm_mut_add_mimetype'" . ').val())"/></td>';
+        echo '<td id="jm_mut_add_button_td">';
+          // The following button's onclick handler is added via javascript. See jm_mut.js. 
+        echo '<input id="jm_mut_add_button" type="button" value="add" /></td>';
         echo '</tr>' . "\n";
 	echo "</table>\n";
         
@@ -140,6 +139,9 @@ function jm_mut_enqueue_scripts($hook) {
 
 	// Javascript is kept in js/jm_mut.js. JQuery is a dependency. 
 	wp_enqueue_script( 'jm-mut-js', plugin_dir_url( __FILE__ ) . 'js/jm_mut.js', array( 'jquery' ) );
+        // Respects SSL, Style.css is relative to the current file
+	wp_register_style( 'jm-mut-style', plugin_dir_url( __FILE__ ) . 'css/jm_mut.css' );
+        wp_enqueue_style( 'jm-mut-style' );
 }
 
 add_action( 'admin_enqueue_scripts', 'jm_mut_enqueue_scripts' );
@@ -174,6 +176,7 @@ add_action('wp_ajax_jm_mut_delete_type', 'jm_mut_delete_type_callback');
  * 
 */
 function jm_mut_add_type_callback() {
+//	check_ajax_referer( 'my-special-string', 'jm_mut_nonce' );
 	$extension = $_POST['extension_to_add'];
 	$mimetype  = $_POST['mimetype_to_add'];
 

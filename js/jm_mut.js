@@ -9,25 +9,23 @@ jQuery(document).ready(function($) {
 			extension_to_delete: extension
 		};
 
-	        // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
+	        // The ajaxurl variable should be defined for us and point to admin-ajax.php
+		// This requires WordPress version 2.8 or greater.
 		jQuery.post(ajaxurl, data, function(response) {
-//			alert('jm_mut_delete AJAX response: ' + response);
                         location.reload();
 		});
 	}
 
-	document.jm_mut_add = function( extension, mimetype ) {
-//		ok = confirm("Are you SURE you want to allow uploading files with " +
-//		             "an extension matched by '" + extension + "' and a " +
-//		             "mimetype of '" + mimetype + "'?");
-//		if (!ok) return; 
+	// Add the onclick handler for the add button. 
+	$('#jm_mut_add_button')[0].onclick = function() {
+		extension = $('#jm_mut_add_extension').val();
+		mimetype  = $('#jm_mut_add_mimetype').val();
 		var data = { 
 			action: 'jm_mut_add_type',
 			extension_to_add: extension,
 			mimetype_to_add: mimetype
 		};
 		jQuery.post(ajaxurl, data, function(response) { 
-//			alert('jm_mut_add AJAX response: ' + response);
                         location.reload();
 		}); 
 	}
