@@ -42,7 +42,10 @@ License: GPL2
 */
 
 
+
 register_activation_hook( __FILE__, 'jm_mut_install' ); 
+
+
 
 /**
  * Callback for activation hook.
@@ -54,7 +57,9 @@ register_activation_hook( __FILE__, 'jm_mut_install' );
 function jm_mut_install() { 
     $mime_types = get_allowed_mime_types(); 
     add_option('jm_mut_mime_types', $mime_types); 
-}
+} // jm_mut_install()
+
+
 
 /**
  * Load mime types array from database.
@@ -68,7 +73,7 @@ function jm_mut_load_mime_types($mime_types=array()) {
         add_option( 'jm_mut_mime_types', $mime_types ); 
     } 
     return $jm_mut_mime_types;
-}
+} // jm_mut_load_mime_types($mime_types=array())
 
 add_filter( 'upload_mimes', 'jm_mut_load_mime_types');
 
@@ -86,7 +91,7 @@ function jm_mut_settings_api_init() {
 		'jm_mut_setting_section_callback',
 		'media');
  	
-}// jm_mut_settings_api_init()
+} // jm_mut_settings_api_init()
  
 add_action('admin_init', 'jm_mut_settings_api_init');
  
@@ -102,7 +107,7 @@ function jm_mut_setting_section_callback() {
 	echo '<p>The extensions below are those permitted for uploaded files.</p>' . "\n";
 	$jm_mut_mime_types = get_option('jm_mut_mime_types'); 
 	echo '<table id="jm_mut_mimetypes_table">' . "\n";
-	echo '  <tr class="jm_mut_mimetype_tr">'
+	echo '  <tr class="jm_mut_mimetype_thtr">'
 	.    '<th>Extension</th>'
 	.    '<th>Mime Type</th>'
 	.    "</tr>\n";
@@ -111,7 +116,7 @@ function jm_mut_setting_section_callback() {
 		.    '<td class="jm_mut_extension_td">' . $extension . '</td>'
 		.    '<td class="jm_mut_mimetype_td">' . $mimetype . '</td>'
 		.    '<td class="jm_mut_delete_td">'
-		.    '<a href="javascript:void(0);" onClick="document.jm_mut_delete(' . "'$extension'" . ')">delete</a></td>'
+		.    '<a href="javascript:void(0);">delete</a></td>'
 		.    "</tr>\n";
 	}
         echo '<tr>'; 
@@ -123,17 +128,18 @@ function jm_mut_setting_section_callback() {
         echo '</tr>' . "\n";
 	echo "</table>\n";
         
-}
+} // jm_mut_setting_section_callback()
+
 
 
 /**
  * Callback for admin_enqueue_scripts
  *
- * Adds code to load our javascript components on the proper admin page. 
+ * Load our javascript and style sheet on the proper admin page. 
  *
 */
-function jm_mut_enqueue_scripts($hook) {
-        // Only load our javascript on the Settings -> Media admin page.
+function jm_mut_enqueue_scripts_and_styles($hook) {
+        // Only load our scripts and styles on the Settings -> Media admin page.
 	if ($hook != 'options-media.php') 
 		return;  
 
@@ -142,9 +148,10 @@ function jm_mut_enqueue_scripts($hook) {
         // Respects SSL, Style.css is relative to the current file
 	wp_register_style( 'jm-mut-style', plugin_dir_url( __FILE__ ) . 'css/jm_mut.css' );
         wp_enqueue_style( 'jm-mut-style' );
-}
+} // jm_mut_enqueue_scripts_and_styles($hook)
 
-add_action( 'admin_enqueue_scripts', 'jm_mut_enqueue_scripts' );
+add_action( 'admin_enqueue_scripts', 'jm_mut_enqueue_scripts_and_styles' );
+
 
 
 /**
@@ -165,9 +172,10 @@ function jm_mut_delete_type_callback() {
 
         echo "REMOVED $extension";
 	die(); // this is required to return a proper result
-}
+} // jm_mut_delete_type_callback()
 
 add_action('wp_ajax_jm_mut_delete_type', 'jm_mut_delete_type_callback');
+
 
 
 /**
@@ -190,7 +198,7 @@ function jm_mut_add_type_callback() {
 
         echo "ADDED $extension => $mimetype";
 	die(); // this is required to return a proper result
-}
+} // jm_mut_add_type_callback()
 
 add_action('wp_ajax_jm_mut_add_type', 'jm_mut_add_type_callback');
 
