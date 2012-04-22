@@ -145,6 +145,12 @@ function jm_mut_enqueue_scripts_and_styles($hook) {
 
 	// Javascript is kept in js/jm_mut.js. JQuery is a dependency. 
 	wp_enqueue_script( 'jm-mut-js', plugin_dir_url( __FILE__ ) . 'js/jm_mut.js', array( 'jquery' ) );
+        $js_data = array( 
+		addNonce => wp_create_nonce('jm_mut_add_nonce'), 
+		delNonce => wp_create_nonce('jm_mut_del_nonce')
+	);
+	wp_localize_script( 'jm-mut-js', 'JmMut', $js_data);
+
         // Respects SSL, Style.css is relative to the current file
 	wp_register_style( 'jm-mut-style', plugin_dir_url( __FILE__ ) . 'css/jm_mut.css' );
         wp_enqueue_style( 'jm-mut-style' );
@@ -160,6 +166,9 @@ add_action( 'admin_enqueue_scripts', 'jm_mut_enqueue_scripts_and_styles' );
  *
 */
 function jm_mut_delete_type_callback() {
+	// Check that this is a good request. 
+	// Note: This is silent on failure. 
+	check_ajax_referer( 'jm_mut_del_nonce', 'nonce');
 	$extension = $_POST['extension_to_delete'];
         
 	// FIXME - We aren't checking that the option exists. 
@@ -184,13 +193,17 @@ add_action('wp_ajax_jm_mut_delete_type', 'jm_mut_delete_type_callback');
  * 
 */
 function jm_mut_add_type_callback() {
-//	check_ajax_referer( 'my-special-string', 'jm_mut_nonce' );
+	// Check that this is a good request. 
+	// Note: This is silent on failure. 
+	check_ajax_referer( 'jm_mut_add_nonce', 'nonce');
+
 	$extension = $_POST['extension_to_add'];
 	$mimetype  = $_POST['mimetype_to_add'];
 
 	// FIXME - We aren't checking that the option exists. 
 	$jm_mut_mime_types = get_option( 'jm_mut_mime_types' ); 
 
+	// FIXME - We need to check to see if the extension already exists.
 	// FIXME - We need to validate both pieces of data here. 
 	$jm_mut_mime_types[$extension] = $mimetype;
 
