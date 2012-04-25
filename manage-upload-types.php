@@ -1,29 +1,13 @@
 <?php
 /*
 Plugin Name: Manage Upload Types
-Plugin URI: http://www.madea.net/projects/wordpress/plugins/manage-upload-types
-Description: Allows management of allowed upload file extensions.
-Version: 0.1
+Plugin URI: http://www.madea.net/projects/wordpress/plugins/manage-upload-types/
+Description: Enables changing the types of files allowed to be uploaded to the media library.
+Version: 0.9
 Author: Jeremy Madea
 Author URI: http://madea.net/
 License: GPL2
 */
-
-/* ***********************************************************************
-   ***********************************************************************
-
-   WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
-
-
-   This is unreleased ALPHA quality software . . . Use at your own risk!!! 
-
-
-   WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
-
-   ***********************************************************************
-   ***********************************************************************
-*/
-
 
 /*  Copyright 2012 Jeremy Madea
 
@@ -163,7 +147,7 @@ add_action( 'admin_enqueue_scripts', 'jm_mut_enqueue_scripts_and_styles' );
 /**
  * Callback for AJAX when a mime type is deleted.
  *
- *
+ * Check that this is a valid request and, if so, perform the deletion.
 */
 function jm_mut_delete_type_callback() {
 	// Check that this is a good request. 
@@ -190,7 +174,7 @@ add_action('wp_ajax_jm_mut_delete_type', 'jm_mut_delete_type_callback');
 /**
  * Callback for AJAX when a mime type is added.
  *
- * 
+ * Check that this is a valid request and, if so, perform the addition.
 */
 function jm_mut_add_type_callback() {
 	// Check that this is a good request. 

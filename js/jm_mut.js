@@ -24,6 +24,7 @@ jQuery(document).ready(function($) {
 		        // The ajaxurl variable should be defined for us and point to admin-ajax.php
 			// This requires WordPress version 2.8 or greater.
 			jQuery.post(ajaxurl, data, function(response) {
+				// FIXME: Response should be checked before hiding the row.
 				$(table_row).hide(500);
 			});
 		});
