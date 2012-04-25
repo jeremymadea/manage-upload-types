@@ -23,8 +23,7 @@ Manage Upload Types enables an administrator to see and change the list of file 
 
 = Must I click "Save Changes" to finalize additions or deletions made to the allowed upload types? =
 
-No. The Save Changes button is necessary to save changes mades to other options on the Settings->Media page, but the 
-Manage Upload Types section is AJAX driven and changes are made immediately. 
+No. The Save Changes button is necessary to save changes mades to other options on the Settings->Media page, but the Manage Upload Types section is AJAX driven and changes are made immediately. 
 
 
 == Screenshots ==
